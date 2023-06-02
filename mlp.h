@@ -33,6 +33,7 @@ class MLP {
     int hidden_size;
 public:
     int forward();
+    void backward();
 };
 
 
