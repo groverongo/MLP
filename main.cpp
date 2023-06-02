@@ -1,8 +1,5 @@
 #include <iostream>
-#include <Eigen/Dense>
-
-using Eigen::MatrixXd;
-using Eigen::VectorXd;
+#include "mlp.h"
 
 int main()
 {
