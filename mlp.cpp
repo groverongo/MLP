@@ -8,9 +8,12 @@ VectorXd relu(const VectorXd &vec) {
     return vec.array().max(0.0);
 }
 
+/**
+ * (1 + e**(-x))**-1
+*/
 VectorXd sigmoidea(const VectorXd &vec) {
-    Eigen::ArrayXd result = (1+(vec.array().exp())).array().pow(-1);
-    return Eigen::VectorXd::Map(result.data(), result.size());
+    ArrayXd x = vec.array();
+    return (1 + (-x).exp()).pow(-1);
 }
 
 VectorXd softmax(const VectorXd &vec){

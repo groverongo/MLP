@@ -1,8 +1,16 @@
 #include <iostream>
-#include "mlp.h"
+#include <Eigen/Dense>
+#include"mlp.h"
 
 int main() {
-//    Layer layer(10, a_relu);
-//    std::cout << layer.pesos;
-    cout << sigmoidea(VectorXd::Random(10));
+    Eigen::VectorXd a(4);
+    a << 2, 2, 4, 9;
+
+    Eigen::VectorXd result = a.array().exp();
+
+    std::cout << "Result: " << result << std::endl;
+    std::cout << "Result: " << sigmoidea(a) << std::endl;
+
+    return 0;
 }
+
