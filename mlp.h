@@ -1,39 +1,54 @@
-//
-// Created by Sebastian Knell on 2/06/23.
-//
-
-#ifndef MLP_MLP_H
-#define MLP_MLP_H
+#ifndef MLP_H
+#define MLP_H
 
 #include <Eigen/Dense>
+#include<vector>
+#include<list>
 using namespace std;
 using namespace Eigen;
 
-enum activacion{
-    a_softmax,
-    a_sigmoidea,
-    a_relu
+struct Modulo{
+    virtual VectorXd operator()(const VectorXd&) = 0;
 };
 
-VectorXd sigmoidea(const VectorXd&);
-VectorXd sofmax(const VectorXd&);
-VectorXd relu(const VectorXd&);
+enum class Activacion_t{
+    sigmoidea,
+    softmax,
+    relu
+};
 
-struct Layer {
-    // vector neto
-    VectorXd salida;
+struct Activacion: public Modulo{
+    Activacion_t tipo;
+    static VectorXd sigmoidea(const VectorXd&);
+    static VectorXd softmax(const VectorXd&);
+    static VectorXd relu(const VectorXd&);
+    Activacion(Activacion_t _tipo);
+    virtual VectorXd operator()(const VectorXd&) override;
+};
+
+struct Capa: public Modulo{
     // matriz de pesos
     MatrixXd pesos;
     // funcion de activacion
-    Layer(int _neuronas, activacion f_activacion);
+    Capa(int, int);
+
+    virtual VectorXd operator()(const VectorXd&) override;
 };
 
 class MLP {
     int n;
     int hidden_size;
+    list<Modulo*> modulos;
+
+
 public:
-    int forward();
-    void backward();
+    MLP();
+    ~MLP();
+
+    void agregar_modulo(Modulo*);
+    VectorXd reenviar(const VectorXd&);
+    // int forward();
+    // void backward();
 };
 
 
