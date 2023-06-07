@@ -4,6 +4,34 @@
 #include "mlp.h"
 using namespace std;
 
+Eigen::MatrixXd readCSV(std::string file, int rows, int cols) {
+    std::ifstream in(file);
+    std::string line;
+
+    int row = 0;
+    int col = 0;
+
+    Eigen::MatrixXd res = Eigen::MatrixXd(rows, cols);
+    if (in.is_open()) {
+        while (std::getline(in, line)) {
+            char *ptr = (char *) line.c_str();
+            int len = line.length();
+            col = 0;
+            char *start = ptr;
+            for (int i = 0; i < len; i++) {
+                if (ptr[i] == ',') {
+                    res(row, col++) = atof(start);
+                    start = ptr + i + 1;
+                }
+            }
+            res(row, col) = atof(start);
+            row++;
+        }
+        in.close();
+    }
+    return res;
+}
+
 void prueba_XOR(){
     MatrixXd X(4, 2);
     X << 0,0, 1,0, 0,1, 1,1;
@@ -21,6 +49,8 @@ void prueba_XOR(){
 
 int main()
 {
+    MatrixXd A = readCSV("vectores.csv",2430,130);
+    std::cout<<A;
     prueba_XOR();
     /* MLP mlp;
     Capa* m1 = new Capa{4, 10};
