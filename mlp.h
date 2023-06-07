@@ -13,20 +13,21 @@ struct Modulo{
 
 enum class Activacion_t{
     sigmoidea,
-    softmax,
+    tanh,
     relu
 };
 
 struct Activacion: public Modulo{
     Activacion_t tipo;
     static VectorXd sigmoidea(const VectorXd&);
-    static VectorXd softmax(const VectorXd&);
+    static VectorXd tanh(const VectorXd&);
     static VectorXd relu(const VectorXd&);
     Activacion(Activacion_t _tipo);
     virtual VectorXd operator()(const VectorXd&) override;
 };
 
 struct Capa: public Modulo{
+    VectorXd sesgo;
     // matriz de pesos
     MatrixXd pesos;
     // funcion de activacion

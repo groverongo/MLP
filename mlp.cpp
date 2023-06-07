@@ -2,7 +2,7 @@
 
 VectorXd Capa::operator()(const VectorXd &vec)
 {
-    return pesos * vec;
+    return this->pesos.transpose() * vec + this->sesgo;
 }
 
 VectorXd Activacion::relu(const VectorXd &vec)
@@ -23,14 +23,12 @@ VectorXd MLP::reenviar(const VectorXd& vec){
  */
 VectorXd Activacion::sigmoidea(const VectorXd &vec)
 {
-    ArrayXd x = vec.array();
-    return (1 + (-x).exp()).pow(-1);
+    return (1 + (-vec.array()).exp()).pow(-1);
 }
 
-VectorXd Activacion::softmax(const VectorXd &vec)
+VectorXd Activacion::tanh(const VectorXd &vec)
 {
-    VectorXd num = vec.array().exp();
-    return (num / num.sum());
+    return vec.array().tanh();
 }
 
 Activacion::Activacion(Activacion_t _tipo)
@@ -42,8 +40,8 @@ VectorXd Activacion::operator()(const VectorXd &vec)
     {
     case Activacion_t::sigmoidea:
         return Activacion::sigmoidea(vec);
-    case Activacion_t::softmax:
-        return Activacion::softmax(vec);
+    case Activacion_t::tanh:
+        return Activacion::tanh(vec);
     case Activacion_t::relu:
         return Activacion::relu(vec);
     }
@@ -51,7 +49,7 @@ VectorXd Activacion::operator()(const VectorXd &vec)
 }
 
 Capa::Capa(int entrada, int salida)
-    : pesos(MatrixXd::Random(salida, entrada)) {}
+    : pesos(MatrixXd::Random(entrada, salida)), sesgo(VectorXd::Random(salida)) {}
 
 MLP::MLP() = default;
 
