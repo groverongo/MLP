@@ -11,17 +11,20 @@ using namespace std;
 using namespace Eigen;
 
 class MLP {
+private:
     int n;
     int hidden_size;
     list<Modulo*> modulos;
 
+protected:
+    VectorXd coste(const VectorXd&, const VectorXd&);
 
 public:
     MLP();
     ~MLP();
 
     void agregar_modulo(Modulo*);
-    VectorXd reenviar(const VectorXd&);
+    VectorXd reenviar(const VectorXd&, const VectorXd&);
     // int forward();
     // void backward();
 };

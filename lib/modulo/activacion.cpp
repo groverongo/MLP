@@ -1,5 +1,22 @@
 #include "modulo/activacion.h"
 
+VectorXd derivada_sigmoidea(const VectorXd& vec){
+    ArrayXd normal = Activacion::sigmoidea(vec).array();
+    return normal*(1-normal);
+}
+
+VectorXd derivada_tanh(const VectorXd& vec){
+    ArrayXd normal = Activacion::tanh(vec).array();
+    return 1 - normal.pow(2);
+}
+
+VectorXd derivada_relu(const VectorXd& vec){
+    VectorXd normal = Activacion::relu(vec);
+    return normal.unaryExpr([](double valor){
+        return valor != 0.0 ? 1.0: 0.0;
+    });
+}
+
 VectorXd Activacion::relu(const VectorXd &vec)
 {
     return vec.array().max(0.0);

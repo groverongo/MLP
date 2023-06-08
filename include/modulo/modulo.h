@@ -7,6 +7,7 @@ using namespace Eigen;
 
 struct Modulo{
     virtual VectorXd operator()(const VectorXd&) = 0;
+    
 };
 
 #endif

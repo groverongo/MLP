@@ -17,6 +17,11 @@ struct Activacion: public Modulo{
     static VectorXd sigmoidea(const VectorXd&);
     static VectorXd tanh(const VectorXd&);
     static VectorXd relu(const VectorXd&);
+
+    static VectorXd derivada_sigmoidea(const VectorXd&);
+    static VectorXd derivada_tanh(const VectorXd&);
+    static VectorXd derivada_relu(const VectorXd&);
+
     Activacion(Activacion_t _tipo);
     virtual VectorXd operator()(const VectorXd&) override;
 };
