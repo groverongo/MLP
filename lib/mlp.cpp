@@ -49,7 +49,7 @@ VectorXd Activacion::operator()(const VectorXd &vec)
 }
 
 Capa::Capa(int entrada, int salida)
-    : pesos(MatrixXd::Random(entrada, salida)), sesgo(VectorXd::Random(salida)) {}
+    : pesos(MatrixXd::Random(entrada, salida)), sesgo(VectorXd::Zero(salida)) {}
 
 MLP::MLP() = default;
 

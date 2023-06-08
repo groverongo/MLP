@@ -21,10 +21,10 @@ void prueba_XOR(){
 }
 
 void prueba_CSV(){
-    MatrixXd datos = cargar_csv("./../../datos.csv");
+    MatrixXd datos = cargar_csv("./../../res/datos.csv");
     MatrixXd X = datos.leftCols(128);
     MatrixXd Y = datos.rightCols(datos.cols() - 128);
-    cout<<Y;
+    cout<<Y.row(0);
 }
 
 int main()
