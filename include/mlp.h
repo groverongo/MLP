@@ -18,6 +18,7 @@ private:
 
 protected:
     VectorXd coste(const VectorXd&, const VectorXd&);
+    VectorXd derivada_coste(const VectorXd&, const VectorXd&);
 
 public:
     MLP();

@@ -12,6 +12,10 @@ VectorXd MLP::coste(const VectorXd& vec_h, const VectorXd& vec_y){
     return (vec_y - vec_h).array().pow(2) / 2.0;
 }
 
+VectorXd MLP::derivada_coste(const VectorXd& vec_h, const VectorXd& vec_y){
+    return vec_h - vec_y;
+}
+
 MLP::MLP() = default;
 
 void MLP::agregar_modulo(Modulo* _modulo)
