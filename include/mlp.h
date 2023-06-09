@@ -12,20 +12,21 @@ using namespace Eigen;
 struct MLP {
     int n;
     int hidden_size;
-    list<Capa> capas;
+    vector<Capa> capas;
     VectorXd salida;
+    MatrixXd X, Y;
 
     VectorXd coste(const VectorXd&, const VectorXd&);
     VectorXd derivada_coste(const VectorXd&, const VectorXd&);
 
-    MLP();
+    MLP(MatrixXd, MatrixXd);
     ~MLP();
 
     void agregar_capa(Capa);
-    VectorXd propagacion_adelante(const VectorXd&, const VectorXd&);
-    MatrixXd propagacion_atras();
+    VectorXd propagacion_adelante(const int);
+    void propagacion_atras(const int, const double);
 
-    void entrenar(const MatrixXd&, const MatrixXd&);
+    void entrenar(const int, const double);
 };
 
 
