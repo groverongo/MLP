@@ -9,6 +9,10 @@ VectorXd MLP::propagacion_adelante(const VectorXd& vec_x, const VectorXd& vec_y)
     return this->coste(vec_h, vec_y);
 }
 
+void MLP::propagacion_atras(){
+    
+}
+
 // C = (a^(L) - y)^2
 VectorXd MLP::coste(const VectorXd& vec_h, const VectorXd& vec_y){
     return (vec_y - vec_h).array().pow(2);

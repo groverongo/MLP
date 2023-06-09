@@ -23,6 +23,7 @@ struct MLP {
 
     void agregar_capa(Capa);
     VectorXd propagacion_adelante(const VectorXd&, const VectorXd&);
+    void propagacion_atras();
 };
 
 
