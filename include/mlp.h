@@ -4,30 +4,25 @@
 #include <Eigen/Dense>
 #include<vector>
 #include<list>
-#include"modulo/modulo.h"
-#include"modulo/capa.h"
-#include"modulo/activacion.h"
+#include<iostream>
+#include"capa.h"
 using namespace std;
 using namespace Eigen;
 
-class MLP {
-private:
+struct MLP {
     int n;
     int hidden_size;
-    list<Modulo*> modulos;
+    list<Capa> capas;
+    VectorXd salida;
 
-protected:
     VectorXd coste(const VectorXd&, const VectorXd&);
     VectorXd derivada_coste(const VectorXd&, const VectorXd&);
 
-public:
     MLP();
     ~MLP();
 
-    void agregar_modulo(Modulo*);
-    VectorXd reenviar(const VectorXd&, const VectorXd&);
-    // int forward();
-    // void backward();
+    void agregar_capa(Capa);
+    VectorXd propagacion_adelante(const VectorXd&, const VectorXd&);
 };
 
 

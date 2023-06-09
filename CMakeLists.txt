@@ -13,9 +13,7 @@ include_directories(
 file(GLOB archivos
     src/main.cpp 
     lib/*.cpp
-    lib/modulo/*.cpp
     include/*.h 
-    include/modulo/*.h 
 )
 
 add_executable(mlp 

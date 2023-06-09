@@ -12,12 +12,13 @@ void prueba_XOR(){
     Y << 1,0, 0,1, 0,1, 1,0;
 
     MLP mlp;
-    mlp.agregar_modulo(new Capa{2,2});
-    mlp.agregar_modulo(new Activacion{Activacion_t::sigmoidea});
-    mlp.agregar_modulo(new Capa{2,2});
-    mlp.agregar_modulo(new Activacion{Activacion_t::sigmoidea});
+    mlp.agregar_capa(Capa{2,2, Activacion::sigmoidea});
+    mlp.agregar_capa(Capa{2,2, Activacion::sigmoidea});
 
-    cout<<mlp.reenviar(X.row(0)).transpose();
+    cout<<mlp.propagacion_adelante(X.row(1), Y.row(0)).transpose()<<endl;
+
+    cout<<Y.row(0)<<endl;
+    cout<<mlp.salida.transpose()<<endl;
 }
 
 void prueba_CSV(){
@@ -30,7 +31,7 @@ void prueba_CSV(){
 int main()
 {
     try{
-        prueba_CSV();
+        prueba_XOR();
     }
     catch(const char* a){
         cout<<a;
