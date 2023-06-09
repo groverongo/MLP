@@ -10,6 +10,10 @@ VectorXd MLP::propagacion_adelante(const VectorXd& vec_x, const VectorXd& vec_y)
 }
 
 void MLP::propagacion_atras(){
+
+}
+
+void entrenar(const MatrixXd&, const MatrixXd&){
     
 }
 
