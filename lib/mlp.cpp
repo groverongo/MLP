@@ -16,12 +16,17 @@ VectorXd MLP::producto_recursivo(const int capa_actual, const int capa_peso, con
     return capa_objetivo.derivada_activado.cwiseProduct(capa_objetivo.pesos.transpose() * this->producto_recursivo(capa_actual-1, capa_peso, neurona_destino));
 }
 
+VectorXd MLP::softmax(const VectorXd& vec){
+    VectorXd expo_vec = vec.array().exp();
+    return expo_vec.array() / expo_vec.sum();
+}
+
 double MLP::propagacion_adelante(const int fila){
     VectorXd vec_h = X.row(fila).transpose();
     for(Capa &c: this->capas){
         vec_h = c.propagar(vec_h);
     }
-    this->salida = vec_h;
+    this->salida = this->softmax(vec_h);
     return this->entropia(vec_h, Y.row(fila));
 }
 
@@ -190,8 +195,7 @@ void MLP::entropia_derivadas_salida(const int fila, MatrixXd& derivada_pesos, Ve
     VectorXd vector_y = this->Y.row(fila);
     VectorXd vector_h = this->vector_activacion(indice_salida, fila);
 
-    VectorXd expo_h = vector_h.array().exp();
-    VectorXd soft_h = expo_h.array() / expo_h.sum();
+    VectorXd soft_h = this->softmax(vector_h);
 
     VectorXd derivada_h_b = this->vector_derivada_activacion(indice_salida);
     derivada_sesgo = (soft_h - vector_y).cwiseProduct(derivada_h_b);    
@@ -203,8 +207,7 @@ void MLP::entropia_derivadas_oculta(const int capa, const int neurona_destino, c
     VectorXd vector_y = this->Y.row(fila);
     VectorXd vector_h = this->vector_activacion(ultima_capa, fila);
 
-    VectorXd expo_h = vector_h.array().exp();
-    VectorXd soft_h = expo_h.array() / expo_h.sum();
+    VectorXd soft_h = this->softmax(vector_h);
 
     VectorXd vector_recursion = producto_recursivo(ultima_capa, capa, neurona_destino);
     VectorXd derivada_h_b = vector_recursion * vector_derivada_activacion(capa).coeff(neurona_destino);

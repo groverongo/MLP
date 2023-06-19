@@ -41,6 +41,8 @@ struct MLP {
     void entrenar(const int, const double);
     MatrixXd evaluar();
 
+    VectorXd softmax(const VectorXd&);
+
     void exportar();
     void cargar();
 };
