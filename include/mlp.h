@@ -17,10 +17,8 @@ struct MLP {
     MatrixXd X, Y;
 
     VectorXd producto_recursivo(const int, const int, const int);
-    // VectorXd coste(const VectorXd&, const VectorXd&);
-    VectorXd derivada_coste(const VectorXd&, const VectorXd&);
-    VectorXd derivada_coste_pesos(const int, const int, const int);
-    MatrixXd derivada_pesos_salida(const int);
+    void derivadas_oculta(const int, const int, const int, MatrixXd&, VectorXd&);
+    void derivadas_salida(const int, MatrixXd&, VectorXd&);
     double coste(const VectorXd&, const VectorXd&);
     const VectorXd& vector_activacion(const int, const int);
     const VectorXd& vector_derivada_activacion(const int);
