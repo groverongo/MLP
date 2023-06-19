@@ -26,25 +26,23 @@ VectorXd MLP::propagacion_adelante(const int fila){
     // return this->coste(vec_h, vec_y);
 }
 
-MatrixXd MLP::derivada_pesos_salida(const int fila){
+void MLP::derivadas_salida(const int fila, MatrixXd& derivada_pesos, VectorXd& derivada_sesgo){
     int indice_salida = this->capas.size()-1;
     VectorXd diferencia_y = this->vector_activacion(indice_salida) - this->Y.row(fila);
     VectorXd producto_elemento = diferencia_y.cwiseProduct(this->vector_derivada_activacion(indice_salida));
-    return (vector_activacion(indice_salida) * producto_elemento.transpose()) / this->Y.cols();
+    
+    derivada_sesgo = producto_elemento / this->Y.cols();
+    derivada_pesos = vector_activacion(indice_salida) * derivada_sesgo.transpose();
 }
 
 void MLP::propagacion_atras(const int fila, const double ratio_aprendizaje) {
     // hidden output
     int n = this->capas.size();
-    MatrixXd derivada_pesos = this->derivada_pesos_salida(fila);
+    MatrixXd derivada_pesos;
+    VectorXd derivada_sesgo;
+    this->derivadas_salida(fila, derivada_pesos, derivada_sesgo);
     this->matriz_pesos(n-1) -= ratio_aprendizaje * derivada_pesos;
-
-    auto output = this->capas[n-1];
-    auto hidden = this->capas[n-2];
-    auto ultimo_ro = (this->derivada_coste(this->salida, this->Y.row(fila)).cwiseProduct(output.derivada_activacion()));
-    auto derivada = hidden.activado * ultimo_ro.transpose();
-    // output.pesos -= ratio_aprendizaje * derivada;
-    output.sesgo -= ratio_aprendizaje*ultimo_ro;
+    this->vector_sesgo(n-1) -= ratio_aprendizaje * derivada_sesgo;
 
     // hidden hidden
     for (int l = n-2; l >= 0; l--) {
@@ -52,21 +50,23 @@ void MLP::propagacion_atras(const int fila, const double ratio_aprendizaje) {
         derivada_pesos = MatrixXd(this->matriz_pesos(l).rows(), this->matriz_pesos(l).cols());
 
         for(int i = 0; i<derivada_pesos.cols(); i++){
-            derivada_pesos.col(i) = this->derivada_coste_pesos(l, i, fila);
+            this->derivadas_oculta(l, i, fila, derivada_pesos, derivada_sesgo);
         }
 
         this->matriz_pesos(l) -= ratio_aprendizaje * derivada_pesos; 
+        this->vector_sesgo(l) -= ratio_aprendizaje * derivada_sesgo;
     }
 }
 
-VectorXd MLP::derivada_coste_pesos(const int capa, const int neurona_destino, const int fila){
+void MLP::derivadas_oculta(const int capa, const int neurona_destino, const int fila, MatrixXd& derivada_pesos, VectorXd& derivada_sesgo){
     int ultima_capa = this->capas.size()-1;
     VectorXd vector_y = this->Y.row(fila);
     VectorXd vector_h = this->vector_activacion(ultima_capa, fila);
     VectorXd diferencia_y = vector_h - vector_y;
     VectorXd vector_recursion = producto_recursivo(ultima_capa, capa, neurona_destino);
     
-    return vector_recursion.cwiseProduct(diferencia_y).mean() * vector_derivada_activacion(capa).coeff(neurona_destino) * vector_activacion(capa-1, fila);
+    derivada_sesgo[neurona_destino] = vector_recursion.cwiseProduct(diferencia_y).mean() * vector_derivada_activacion(capa).coeff(neurona_destino);
+    derivada_pesos.col(neurona_destino) = derivada_sesgo * vector_activacion(capa-1, fila);
 }
 
 
@@ -97,18 +97,6 @@ VectorXd& MLP::vector_sesgo(const int indice_capa){
 
 double MLP::coste(const VectorXd& vec_h, const VectorXd& vec_y){
     return ((vec_h - vec_y).array().pow(2)/2).mean();
-}
-
-
-
-/* // C = 2^{-1}(a^(L) - y)^2
-VectorXd MLP::coste(const VectorXd& vec_h, const VectorXd& vec_y){
-    return (vec_y - vec_h).array().pow(2);
-}
- */
-// C = 2*(a^(L) - y)
-VectorXd MLP::derivada_coste(const VectorXd& vec_h, const VectorXd& vec_y){
-    return (vec_h - vec_y);
 }
 
 MLP::MLP(MatrixXd X, MatrixXd Y): X(X), Y(Y) {};
