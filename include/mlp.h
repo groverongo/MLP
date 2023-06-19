@@ -6,6 +6,7 @@
 #include<list>
 #include<iostream>
 #include"capa.h"
+#include<cstdio>
 using namespace std;
 using namespace Eigen;
 
@@ -20,7 +21,7 @@ struct MLP {
     void derivadas_oculta(const int, const int, const int, MatrixXd&, VectorXd&);
     void derivadas_salida(const int, MatrixXd&, VectorXd&);
     double coste(const VectorXd&, const VectorXd&);
-    const VectorXd& vector_activacion(const int, const int=-1);
+    VectorXd vector_activacion(const int, const int=-1);
     const VectorXd& vector_derivada_activacion(const int);
     MatrixXd& matriz_pesos(const int);
     VectorXd& vector_sesgo(const int);
@@ -33,6 +34,7 @@ struct MLP {
     void propagacion_atras(const int, const double);
 
     void entrenar(const int, const double);
+    MatrixXd evaluar();
 };
 
 

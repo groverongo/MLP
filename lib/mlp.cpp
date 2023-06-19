@@ -27,7 +27,7 @@ double MLP::propagacion_adelante(const int fila){
 
 void MLP::derivadas_salida(const int fila, MatrixXd& derivada_pesos, VectorXd& derivada_sesgo){
     int indice_salida = this->capas.size()-1;
-    VectorXd diferencia_y = this->vector_activacion(indice_salida) - this->Y.row(fila);
+    VectorXd diferencia_y = this->vector_activacion(indice_salida) - this->Y.row(fila).transpose();
     VectorXd producto_elemento = diferencia_y.cwiseProduct(this->vector_derivada_activacion(indice_salida));
     
     derivada_sesgo = producto_elemento / this->Y.cols();
@@ -47,7 +47,6 @@ void MLP::propagacion_atras(const int fila, const double ratio_aprendizaje) {
     for (int l = n-2; l >= 0; l--) {
         // Luego se debe trasponer
         derivada_pesos = MatrixXd(this->matriz_pesos(l).rows(), this->matriz_pesos(l).cols());
-
         for(int i = 0; i<derivada_pesos.cols(); i++){
             this->derivadas_oculta(l, i, fila, derivada_pesos, derivada_sesgo);
         }
@@ -65,23 +64,40 @@ void MLP::derivadas_oculta(const int capa, const int neurona_destino, const int 
     VectorXd vector_recursion = producto_recursivo(ultima_capa, capa, neurona_destino);
     
     derivada_sesgo[neurona_destino] = vector_recursion.cwiseProduct(diferencia_y).mean() * vector_derivada_activacion(capa).coeff(neurona_destino);
-    derivada_pesos.col(neurona_destino) = derivada_sesgo * vector_activacion(capa-1, fila);
+    derivada_pesos.col(neurona_destino) = derivada_sesgo[neurona_destino] * vector_activacion(capa-1, fila);
 }
 
 
 void MLP::entrenar(const int epocas, const double ratio_aprendizaje) {
     int n = X.rows();
     for (int epoca = 0; epoca < epocas; epoca++) {
+        printf("Epoca N-%d -> ", epoca+1);
+        VectorXd perdidas(n);
         for (int i = 0; i < n; ++i) {
-            cout<< this->propagacion_adelante(i);
+            double perdida = this->propagacion_adelante(i);
+            perdidas[i] = perdida;
             this->propagacion_atras(i, ratio_aprendizaje);
         }
+        printf("Perdida: %lf\n", perdidas.mean());
     }
 }
 
-const VectorXd& MLP::vector_activacion(const int indice_capa, const int fila){
+MatrixXd MLP::evaluar(){
+    int filas = X.rows();
+    MatrixXd resultado(this->Y.rows(), this->Y.cols());
+    for(int i = 0; i<filas; i++){
+        VectorXd vec_h = X.row(i);
+        for(Capa &c: this->capas){
+            vec_h = c.propagar(vec_h);
+        }
+        resultado.row(i) = vec_h.transpose();
+    }
+    return resultado;
+}
+
+VectorXd MLP::vector_activacion(const int indice_capa, const int fila){
     if(indice_capa<0)
-        return X.row(fila);
+        return X.row(fila).transpose();
     return this->capas.at(indice_capa).activado;
 }
 const VectorXd& MLP::vector_derivada_activacion(const int indice_capa){

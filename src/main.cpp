@@ -13,13 +13,9 @@ void prueba_XOR(){
 
     MLP mlp(X, Y);
     mlp.agregar_capa(Capa{2,2, Activacion::sigmoidea});
-    mlp.agregar_capa(Capa{2,2, Activacion::sigmoidea});
 
-    mlp.entrenar(50, 0.5);
-    // cout<<mlp.propagacion_adelante(1).transpose()<<endl;
-
-    // cout<<Y.row(0)<<endl;
-    // cout<<mlp.salida.transpose()<<endl;
+    mlp.entrenar(1000, 0.01);
+    cout<<mlp.evaluar()<<endl;
 }
 
 void prueba_CSV(){
