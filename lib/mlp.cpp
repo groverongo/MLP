@@ -17,7 +17,7 @@ VectorXd MLP::producto_recursivo(const int capa_actual, const int capa_peso, con
 }
 
 double MLP::propagacion_adelante(const int fila){
-    VectorXd vec_h = X.row(fila);
+    VectorXd vec_h = X.row(fila).transpose();
     for(Capa &c: this->capas){
         vec_h = c.propagar(vec_h);
     }
@@ -31,7 +31,7 @@ void MLP::derivadas_salida(const int fila, MatrixXd& derivada_pesos, VectorXd& d
     VectorXd producto_elemento = diferencia_y.cwiseProduct(this->vector_derivada_activacion(indice_salida));
     
     derivada_sesgo = producto_elemento / this->Y.cols();
-    derivada_pesos = vector_activacion(indice_salida) * derivada_sesgo.transpose();
+    derivada_pesos = vector_activacion(indice_salida-1) * derivada_sesgo.transpose();
 }
 
 void MLP::propagacion_atras(const int fila, const double ratio_aprendizaje) {
@@ -42,14 +42,17 @@ void MLP::propagacion_atras(const int fila, const double ratio_aprendizaje) {
     this->derivadas_salida(fila, derivada_pesos, derivada_sesgo);
     this->matriz_pesos(n-1) -= ratio_aprendizaje * derivada_pesos;
     this->vector_sesgo(n-1) -= ratio_aprendizaje * derivada_sesgo;
-
     // hidden hidden
     for (int l = n-2; l >= 0; l--) {
         // Luego se debe trasponer
         derivada_pesos = MatrixXd(this->matriz_pesos(l).rows(), this->matriz_pesos(l).cols());
+        derivada_sesgo = VectorXd(this->vector_sesgo(l).size());
+        // cout<<"NONONO"<<endl;
         for(int i = 0; i<derivada_pesos.cols(); i++){
             this->derivadas_oculta(l, i, fila, derivada_pesos, derivada_sesgo);
+            // cout<<"Iteracion "<<derivada_pesos.cols()<<endl;
         }
+        // cout<<"NONONO"<<endl;
 
         this->matriz_pesos(l) -= ratio_aprendizaje * derivada_pesos; 
         this->vector_sesgo(l) -= ratio_aprendizaje * derivada_sesgo;
@@ -61,9 +64,14 @@ void MLP::derivadas_oculta(const int capa, const int neurona_destino, const int 
     VectorXd vector_y = this->Y.row(fila);
     VectorXd vector_h = this->vector_activacion(ultima_capa, fila);
     VectorXd diferencia_y = vector_h - vector_y;
+    // cout<<capa<<endl;
+    // cout<<"Recursivo Inicio"<<endl;
     VectorXd vector_recursion = producto_recursivo(ultima_capa, capa, neurona_destino);
+    // cout<<"Recursivo Fin"<<endl;
     
+    // cout<<"Actualiza sesgo "<<capa<<" "<<neurona_destino<<endl;
     derivada_sesgo[neurona_destino] = vector_recursion.cwiseProduct(diferencia_y).mean() * vector_derivada_activacion(capa).coeff(neurona_destino);
+    // cout<<"Actualiza pesos"<<endl;
     derivada_pesos.col(neurona_destino) = derivada_sesgo[neurona_destino] * vector_activacion(capa-1, fila);
 }
 

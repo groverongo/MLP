@@ -22,26 +22,25 @@ void prueba_CSV(){
     MatrixXd datos = cargar_csv("./../../res/datos.csv");
     MatrixXd X = datos.leftCols(128);
     MatrixXd Y = datos.rightCols(datos.cols() - 128);
-    cout<<Y.row(0);
+    
+    MLP mlp(X, Y);
+    mlp.agregar_capa(Capa{(int) X.cols(), 50, Activacion::sigmoidea});
+    mlp.agregar_capa(Capa{50, (int) Y.cols(), Activacion::sigmoidea});
+
+    /* cout<<X.cols()<<' '<<Y.cols()<<endl;
+    for(int i =0; i<mlp.capas.size(); i++){
+        cout<<mlp.capas[i].pesos.rows()<<' '<<mlp.capas[i].pesos.cols()<<endl;
+    } */
+
+    mlp.entrenar(1000, 0.5);
 }
 
-void prueba_seleccion(){
-    MatrixXd M(2,3);
-    VectorXd v(2);
-    M<< 1,2,4,4,65,4;
-    v<<4,5;
-    cout<<M.col(0)<<endl;
-    cout<<v<<endl;
-    cout<<v.cwiseProduct(M.col(0))<<endl;
-    cout<<v<<endl;
-    cout<<v.mean();
-}
 
 int main()
 {
     try{
-        prueba_XOR();
-        // prueba_seleccion();
+        // prueba_XOR();
+        prueba_CSV();
     }
     catch(const char* a){
         cout<<a;
