@@ -11,11 +11,11 @@ void prueba_XOR(){
     MatrixXd Y(4, 2); // Falso, Verdadero
     Y << 1,0, 0,1, 0,1, 1,0;
 
-    MLP mlp;
+    MLP mlp(X, Y);
     mlp.agregar_capa(Capa{2,2, Activacion::sigmoidea});
     mlp.agregar_capa(Capa{2,2, Activacion::sigmoidea});
 
-    cout<<mlp.propagacion_adelante(X.row(1), Y.row(0)).transpose()<<endl;
+    cout<<mlp.propagacion_adelante(1).transpose()<<endl;
 
     cout<<Y.row(0)<<endl;
     cout<<mlp.salida.transpose()<<endl;

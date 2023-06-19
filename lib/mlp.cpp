@@ -43,13 +43,28 @@ void MLP::propagacion_atras(const int fila, const double ratio_aprendizaje) {
     output.sesgo -= ratio_aprendizaje*ultimo_ro;
 
     // hidden hidden
-    for (int i = n-2; i > 1; i--) {
-        int j = i-1;
-        auto hidden1 = this->capas[i]; // se actualiza
-        auto hidden2 = this->capas[j];
+    for (int l = n-2; l > 1; l--) {
+        // Luego se debe trasponer
+        MatrixXd derivada_pesos(this->matriz_pesos(l).rows(), this->matriz_pesos(l).cols());
 
+        for(int i = 0; i<derivada_pesos.cols(); i++){
+            // derivada_pesos.col(i) = ;
+        }
+
+        derivada_pesos = derivada_pesos.transpose();
     }
 }
+
+VectorXd MLP::derivada_coste_pesos(const int capa, const int neurona_destino, const int fila){
+    int ultima_capa = this->capas.size()-1;
+    VectorXd vector_y = this->Y.row(fila);
+    VectorXd vector_h = this->vector_activacion(ultima_capa);
+    VectorXd diferencia_y = vector_h - vector_y;
+    VectorXd vector_recursion = producto_recursivo(ultima_capa, capa, neurona_destino);
+    
+    return vector_recursion.cwiseProduct(diferencia_y).mean() * vector_derivada_activacion(capa).coeff(neurona_destino) * vector_activacion(capa-1);
+}
+
 
 void MLP::entrenar(const int epocas, const double ratio_aprendizaje) {
     auto n = X.rows();
@@ -74,6 +89,8 @@ const MatrixXd& MLP::matriz_pesos(const int indice_capa){
 double MLP::coste(const VectorXd& vec_h, const VectorXd& vec_y){
     return ((vec_h - vec_y).array().pow(2)/2).mean();
 }
+
+
 
 /* // C = 2^{-1}(a^(L) - y)^2
 VectorXd MLP::coste(const VectorXd& vec_h, const VectorXd& vec_y){
