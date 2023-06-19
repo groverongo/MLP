@@ -26,6 +26,8 @@ struct Capa
     VectorXd neto;
     // Valor Activacion;
     VectorXd activado;
+    // Valor de la derivada de Activacion;
+    VectorXd derivada_activado;
 
     // funcion activacion
     VectorXd activacion();

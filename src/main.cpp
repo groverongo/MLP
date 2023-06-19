@@ -28,10 +28,23 @@ void prueba_CSV(){
     cout<<Y.row(0);
 }
 
+void prueba_seleccion(){
+    MatrixXd M(2,3);
+    VectorXd v(2);
+    M<< 1,2,4,4,65,4;
+    v<<4,5;
+    cout<<M.col(0)<<endl;
+    cout<<v<<endl;
+    cout<<v.cwiseProduct(M.col(0))<<endl;
+    cout<<v<<endl;
+    cout<<v.mean();
+}
+
 int main()
 {
     try{
-        prueba_XOR();
+        // prueba_XOR();
+        prueba_seleccion();
     }
     catch(const char* a){
         cout<<a;

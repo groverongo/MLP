@@ -33,6 +33,7 @@ VectorXd Capa::derivada_activacion(){
 VectorXd Capa::propagar(const VectorXd &vec){
     this->neto = this->pesos.transpose() * vec + this->sesgo;
     this->activado = this->activacion();
+    this->derivada_activado = this->derivada_activacion();
     return this->activado;
 }
 
