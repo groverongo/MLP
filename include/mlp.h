@@ -24,14 +24,14 @@ struct MLP {
     const VectorXd& vector_derivada_activacion(const int indice_capa);
     const MatrixXd& matriz_pesos(const int indice_capa);
 
-    MLP();
+    MLP(MatrixXd, MatrixXd);
     ~MLP();
 
     void agregar_capa(Capa);
-    VectorXd propagacion_adelante(const VectorXd&, const VectorXd&);
-    MatrixXd propagacion_atras();
+    VectorXd propagacion_adelante(const int);
+    void propagacion_atras(const int, const double);
 
-    void entrenar(const MatrixXd&, const MatrixXd&);
+    void entrenar(const int, const double);
 };
 
 

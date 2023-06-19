@@ -16,10 +16,10 @@ VectorXd MLP::producto_recursivo(const int capa_actual, const int capa_peso, con
     return capa_objetivo.derivada_activado.cwiseProduct(capa_objetivo.pesos.transpose() * this->producto_recursivo(capa_actual-1, capa_peso, neurona_destino));
 }
 
-VectorXd MLP::propagacion_adelante(const VectorXd& vec_x, const VectorXd& vec_y){
-    VectorXd vec_h = vec_x;
+VectorXd MLP::propagacion_adelante(const int fila){
+    VectorXd vec_h = X.row(fila);
     for(Capa &c: this->capas){
-        vec_h = c.propagar(vec_x);
+        vec_h = c.propagar(vec_h);
     }
     this->salida = vec_h;
     return VectorXd();
@@ -29,9 +29,36 @@ VectorXd MLP::propagacion_adelante(const VectorXd& vec_x, const VectorXd& vec_y)
 // void MLP::propagacion_atras(){
 
 // }
+//     return this->coste(vec_h, Y.row(fila));
+// }
 
-void entrenar(const MatrixXd&, const MatrixXd&){
-    
+void MLP::propagacion_atras(const int fila, const double ratio_aprendizaje) {
+    // hidden output
+    int n = this->capas.size();
+    auto output = this->capas[n-1];
+    auto hidden = this->capas[n-2];
+    auto ultimo_ro = (this->derivada_coste(this->salida, this->Y.row(fila)).cwiseProduct(output.derivada_activacion()));
+    auto derivada = hidden.activado * ultimo_ro.transpose();
+    output.pesos -= ratio_aprendizaje * derivada;
+    output.sesgo -= ratio_aprendizaje*ultimo_ro;
+
+    // hidden hidden
+    for (int i = n-2; i > 1; i--) {
+        int j = i-1;
+        auto hidden1 = this->capas[i]; // se actualiza
+        auto hidden2 = this->capas[j];
+
+    }
+}
+
+void MLP::entrenar(const int epocas, const double ratio_aprendizaje) {
+    auto n = X.rows();
+    for (int epoca = 0; epoca < epocas; epoca++) {
+        for (int i = 0; i < n; ++i) {
+            this->propagacion_adelante(i);
+            this->propagacion_atras(i, ratio_aprendizaje);
+        }
+    }
 }
 
 const VectorXd& MLP::vector_activacion(const int indice_capa){
@@ -58,7 +85,7 @@ VectorXd MLP::derivada_coste(const VectorXd& vec_h, const VectorXd& vec_y){
     return (vec_h - vec_y);
 }
 
-MLP::MLP() = default;
+MLP::MLP(MatrixXd X, MatrixXd Y): X(X), Y(Y) {};
 
 void MLP::agregar_capa(Capa capa)
 {
