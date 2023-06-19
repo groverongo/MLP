@@ -52,6 +52,7 @@ struct Capa
 
     // Iniciar Capa con entradas, salidas y funcion de activacion
     Capa(int, int, Activacion);
+    Capa(Activacion);
 
     // Evaluar la salida con el calculo del valor neto y activado
     VectorXd propagar(const VectorXd&);

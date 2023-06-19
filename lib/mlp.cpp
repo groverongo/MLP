@@ -25,6 +25,18 @@ double MLP::propagacion_adelante(const int fila){
     return this->coste(vec_h, Y.row(fila));
 }
 
+void MLP::cargar(){
+    int l;
+    ifstream cantidad("../../data/cantidad.txt");
+    cantidad>>l;
+    cantidad.close();
+    ifstream archivo_act("../../data/activacion.csv");
+    archivo_act.close();
+    for(int i = 0; i<l; i++){
+        
+    }
+}
+
 void MLP::exportar(){
     int l = 0;
 
@@ -61,6 +73,10 @@ void MLP::exportar(){
         l++;
     }
     archivo_act.close();
+
+    ofstream cantidad("../../data/cantidad.txt");
+    cantidad<<l;
+    cantidad.close();
 }
 
 void MLP::derivadas_salida(const int fila, MatrixXd& derivada_pesos, VectorXd& derivada_sesgo){

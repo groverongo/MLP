@@ -3,6 +3,9 @@
 Capa::Capa(int entrada, int salida, Activacion act)
     : pesos(MatrixXd::Random(entrada, salida)), sesgo(VectorXd::Zero(salida)), tipo(act) {}
 
+Capa::Capa(Activacion act)
+    :tipo(act){}
+
 VectorXd Capa::activacion(){
     switch (this->tipo)
     {

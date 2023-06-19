@@ -38,6 +38,7 @@ struct MLP {
     MatrixXd evaluar();
 
     void exportar();
+    void cargar();
 };
 
 

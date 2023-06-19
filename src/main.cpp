@@ -14,8 +14,8 @@ void prueba_CSV(){
     mlp.agregar_capa(Capa{(int) X.cols(), 50, Activacion::sigmoidea});
     mlp.agregar_capa(Capa{50, (int) Y.cols(), Activacion::sigmoidea});
 
-    mlp.entrenar(2, 0.5);
-    mlp.exportar();
+    // mlp.entrenar(2, 0.5);
+    mlp.cargar();
 }
 
 
