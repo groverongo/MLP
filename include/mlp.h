@@ -5,6 +5,7 @@
 #include<vector>
 #include<list>
 #include<iostream>
+#include<fstream>
 #include"capa.h"
 #include<cstdio>
 using namespace std;
@@ -35,6 +36,8 @@ struct MLP {
 
     void entrenar(const int, const double);
     MatrixXd evaluar();
+
+    void exportar();
 };
 
 

@@ -25,6 +25,44 @@ double MLP::propagacion_adelante(const int fila){
     return this->coste(vec_h, Y.row(fila));
 }
 
+void MLP::exportar(){
+    int l = 0;
+
+    ofstream archivo_act("../../data/activacion.csv", ios::out);
+    for(const Capa& c: this->capas){
+
+        switch(c.tipo){
+            case Activacion::sigmoidea:
+                archivo_act<<0<<'\n';
+                break;
+            case Activacion::tanh:
+                archivo_act<<1<<'\n';
+                break;
+            case Activacion::relu:
+                archivo_act<<2<<'\n';
+                break;
+        }
+
+        ofstream archivo("../../data/pesos_capa_"+to_string(l)+".csv", ios::out);
+        for(int fila = 0; fila<c.pesos.rows(); fila++){
+            for(int columna = 0; columna<c.pesos.cols(); columna++){
+                archivo<<c.pesos(fila, columna);
+                if(columna != c.pesos.cols() -1)
+                    archivo<<',';
+            }
+            archivo<<'\n';
+        }
+        archivo.close();
+        archivo.open("../../data/sesgo_capa_"+to_string(l)+".csv", ios::out);
+        for(int i = 0; i<c.sesgo.size(); i++){
+            archivo<<c.sesgo[i]<<'\n';
+        }
+        archivo.close();
+        l++;
+    }
+    archivo_act.close();
+}
+
 void MLP::derivadas_salida(const int fila, MatrixXd& derivada_pesos, VectorXd& derivada_sesgo){
     int indice_salida = this->capas.size()-1;
     VectorXd diferencia_y = this->vector_activacion(indice_salida) - this->Y.row(fila).transpose();

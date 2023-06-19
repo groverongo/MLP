@@ -2,6 +2,7 @@
 #define CAPA_H
 
 #include<Eigen/Dense>
+#include<string>
 
 using namespace Eigen;
 
