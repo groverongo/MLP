@@ -20,7 +20,7 @@ struct MLP {
     void derivadas_oculta(const int, const int, const int, MatrixXd&, VectorXd&);
     void derivadas_salida(const int, MatrixXd&, VectorXd&);
     double coste(const VectorXd&, const VectorXd&);
-    const VectorXd& vector_activacion(const int, const int);
+    const VectorXd& vector_activacion(const int, const int=-1);
     const VectorXd& vector_derivada_activacion(const int);
     MatrixXd& matriz_pesos(const int);
     VectorXd& vector_sesgo(const int);
@@ -29,7 +29,7 @@ struct MLP {
     ~MLP();
 
     void agregar_capa(Capa);
-    VectorXd propagacion_adelante(const int);
+    double propagacion_adelante(const int);
     void propagacion_atras(const int, const double);
 
     void entrenar(const int, const double);

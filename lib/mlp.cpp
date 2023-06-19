@@ -16,14 +16,13 @@ VectorXd MLP::producto_recursivo(const int capa_actual, const int capa_peso, con
     return capa_objetivo.derivada_activado.cwiseProduct(capa_objetivo.pesos.transpose() * this->producto_recursivo(capa_actual-1, capa_peso, neurona_destino));
 }
 
-VectorXd MLP::propagacion_adelante(const int fila){
+double MLP::propagacion_adelante(const int fila){
     VectorXd vec_h = X.row(fila);
     for(Capa &c: this->capas){
         vec_h = c.propagar(vec_h);
     }
     this->salida = vec_h;
-    return VectorXd();
-    // return this->coste(vec_h, vec_y);
+    return this->coste(vec_h, Y.row(fila));
 }
 
 void MLP::derivadas_salida(const int fila, MatrixXd& derivada_pesos, VectorXd& derivada_sesgo){
@@ -71,16 +70,16 @@ void MLP::derivadas_oculta(const int capa, const int neurona_destino, const int 
 
 
 void MLP::entrenar(const int epocas, const double ratio_aprendizaje) {
-    auto n = X.rows();
+    int n = X.rows();
     for (int epoca = 0; epoca < epocas; epoca++) {
         for (int i = 0; i < n; ++i) {
-            this->propagacion_adelante(i);
+            cout<< this->propagacion_adelante(i);
             this->propagacion_atras(i, ratio_aprendizaje);
         }
     }
 }
 
-const VectorXd& MLP::vector_activacion(const int indice_capa, const int fila=-1){
+const VectorXd& MLP::vector_activacion(const int indice_capa, const int fila){
     if(indice_capa<0)
         return X.row(fila);
     return this->capas.at(indice_capa).activado;

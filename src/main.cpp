@@ -15,10 +15,11 @@ void prueba_XOR(){
     mlp.agregar_capa(Capa{2,2, Activacion::sigmoidea});
     mlp.agregar_capa(Capa{2,2, Activacion::sigmoidea});
 
-    cout<<mlp.propagacion_adelante(1).transpose()<<endl;
+    mlp.entrenar(50, 0.5);
+    // cout<<mlp.propagacion_adelante(1).transpose()<<endl;
 
-    cout<<Y.row(0)<<endl;
-    cout<<mlp.salida.transpose()<<endl;
+    // cout<<Y.row(0)<<endl;
+    // cout<<mlp.salida.transpose()<<endl;
 }
 
 void prueba_CSV(){
@@ -43,8 +44,8 @@ void prueba_seleccion(){
 int main()
 {
     try{
-        // prueba_XOR();
-        prueba_seleccion();
+        prueba_XOR();
+        // prueba_seleccion();
     }
     catch(const char* a){
         cout<<a;
