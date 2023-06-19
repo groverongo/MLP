@@ -5,16 +5,17 @@
 #include"cargar_csv.h"
 using namespace std;
 
-void prueba_CSV(){
-    MatrixXd datos = cargar_csv("./../../res/datos.csv");
+void ejecutar(){
+    MatrixXd datos = cargar_csv("./../../res/training.csv");
     MatrixXd X = datos.leftCols(128);
     MatrixXd Y = datos.rightCols(datos.cols() - 128);
     
     MLP mlp(X, Y);
-    mlp.agregar_capa(Capa{(int) X.cols(), 50, Activacion::sigmoidea});
-    mlp.agregar_capa(Capa{50, (int) Y.cols(), Activacion::sigmoidea});
+    mlp.agregar_capa(Capa{(int) X.cols(), 100, Activacion::sigmoidea});
+    mlp.agregar_capa(Capa{100, (int) Y.cols(), Activacion::sigmoidea});
 
-    mlp.entrenar(5, 0.5);
+    mlp.entrenar(100, 0.05);
+    mlp.exportar();
     // mlp.cargar();
 }
 
@@ -22,7 +23,7 @@ void prueba_CSV(){
 int main()
 {
     try{
-        prueba_CSV();
+        ejecutar();
     }
     catch(const char* a){
         cout<<a;

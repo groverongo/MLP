@@ -1,7 +1,7 @@
 #include "capa.h"
 
 Capa::Capa(int entrada, int salida, Activacion act)
-    : pesos(MatrixXd::Random(entrada, salida)), sesgo(VectorXd::Zero(salida)), tipo(act) {}
+    : pesos(MatrixXd::Random(entrada, salida) / 2), sesgo(VectorXd::Zero(salida)), tipo(act) {}
 
 Capa::Capa(Activacion act)
     :tipo(act){}
