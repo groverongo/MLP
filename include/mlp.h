@@ -8,6 +8,7 @@
 #include<fstream>
 #include"capa.h"
 #include<cstdio>
+#include<functional>
 using namespace std;
 using namespace Eigen;
 
@@ -22,6 +23,9 @@ struct MLP {
     void derivadas_oculta(const int, const int, const int, MatrixXd&, VectorXd&);
     void derivadas_salida(const int, MatrixXd&, VectorXd&);
     double coste(const VectorXd&, const VectorXd&);
+    void entropia_derivadas_oculta(const int, const int, const int, MatrixXd&, VectorXd&);
+    void entropia_derivadas_salida(const int, MatrixXd&, VectorXd&);
+    double entropia(const VectorXd&, const VectorXd&);
     VectorXd vector_activacion(const int, const int=-1);
     const VectorXd& vector_derivada_activacion(const int);
     MatrixXd& matriz_pesos(const int);
