@@ -20,10 +20,12 @@ struct MLP {
     // VectorXd coste(const VectorXd&, const VectorXd&);
     VectorXd derivada_coste(const VectorXd&, const VectorXd&);
     VectorXd derivada_coste_pesos(const int, const int, const int);
+    MatrixXd derivada_pesos_salida(const int);
     double coste(const VectorXd&, const VectorXd&);
-    const VectorXd& vector_activacion(const int indice_capa);
-    const VectorXd& vector_derivada_activacion(const int indice_capa);
-    const MatrixXd& matriz_pesos(const int indice_capa);
+    const VectorXd& vector_activacion(const int, const int);
+    const VectorXd& vector_derivada_activacion(const int);
+    MatrixXd& matriz_pesos(const int);
+    VectorXd& vector_sesgo(const int);
 
     MLP(MatrixXd, MatrixXd);
     ~MLP();
