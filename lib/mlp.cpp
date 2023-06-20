@@ -8,21 +8,11 @@
  * @return Un vector del calculo actual
  * @note El caso base ocurre cuando capa_actual = capa_peso
  * */
-VectorXd MLP::producto_recursivo(const int capa_actual, const int capa_peso, const int neurona_destino){
-    const Capa& capa_objetivo = this->capas[capa_actual];
-        // cout<<capa_objetivo.derivada_activado.rows()<<' '<<capa_objetivo.derivada_activado.cols()<<endl;
-        // cout<<capa_objetivo.pesos.transpose().rows()<<' '<<capa_objetivo.pesos.transpose().cols()<<endl;
-    if(capa_actual == capa_peso){
-        // cout<<capa_objetivo.pesos.transpose().rows()<<' '<<capa_objetivo.pesos.transpose().cols()<<endl;
-        // cout<<capa_objetivo.derivada_activado.rows()<<' '<<capa_objetivo.derivada_activado.cols()<<endl;
-        // cout<<"retornar"<<endl;
-        // cout<<capa_objetivo.pesos.transpose().col(neurona_destino).size()<<endl;
-        // cout<<capa_objetivo.derivada_activado.size()<<endl;
-        return capa_objetivo.derivada_activado.cwiseProduct(capa_objetivo.pesos.transpose().col(neurona_destino));
-        // return capa_objetivo.derivada_activado.cwiseProduct(capa_objetivo.pesos.transpose().col(neurona_destino));
+VectorXd MLP::derivada_recursiva(const int capa_actual, const int capa_limite, const int neurona_destino){
+    if(capa_actual == capa_limite){
+        return vector_derivada_activacion(capa_limite).cwiseProduct(matriz_pesos(capa_limite).transpose().col(neurona_destino));
     }
-    // cout<<capa_actual<<"->";
-    return capa_objetivo.derivada_activado.cwiseProduct(capa_objetivo.pesos.transpose() * this->producto_recursivo(capa_actual-1, capa_peso, neurona_destino));
+    return vector_derivada_activacion(capa_actual).cwiseProduct(matriz_pesos(capa_actual).transpose() * this->derivada_recursiva(capa_actual-1, capa_limite, neurona_destino));
 }
 
 VectorXd MLP::softmax(const VectorXd& vec){
@@ -116,7 +106,7 @@ void MLP::propagacion_atras(const int fila, const double ratio_aprendizaje) {
         derivada_pesos = MatrixXd(this->matriz_pesos(l).rows(), this->matriz_pesos(l).cols());
         derivada_sesgo = VectorXd(this->vector_sesgo(l).size());
         // cout<<"NONONO"<<endl;
-        for(int i = 0; i<derivada_pesos.rows(); i++){
+        for(int i = 0; i<derivada_pesos.cols(); i++){
             // cout<<l<<", "<<i<<endl;
             this->entropia_derivadas_oculta(l, i, fila, derivada_pesos, derivada_sesgo);
             // cout<<"Iteracion "<<derivada_pesos.cols()<<endl;
@@ -134,7 +124,7 @@ void MLP::derivadas_oculta(const int capa, const int neurona_destino, const int 
     VectorXd diferencia_y = vector_h - vector_y;
     // cout<<capa<<endl;
     // cout<<"Recursivo Inicio"<<endl;
-    VectorXd vector_recursion = producto_recursivo(ultima_capa, capa, neurona_destino);
+    VectorXd vector_recursion = derivada_recursiva(ultima_capa, capa, neurona_destino);
     // cout<<"Recursivo Fin"<<endl;
     
     // cout<<"Actualiza sesgo "<<capa<<" "<<neurona_destino<<endl;
@@ -211,24 +201,15 @@ void MLP::entropia_derivadas_salida(const int fila, MatrixXd& derivada_pesos, Ve
     derivada_pesos = vector_activacion(indice_salida-1) * derivada_sesgo.transpose();
 }
 
-void MLP::entropia_derivadas_oculta(const int capa, const int neurona_destino, const int fila, MatrixXd& derivada_pesos, VectorXd& derivada_sesgo){
-    int ultima_capa = this->capas.size()-1;
-    VectorXd vector_y = this->Y.row(fila);
-    VectorXd vector_h = this->vector_activacion(ultima_capa, fila);
+void MLP::entropia_derivadas_oculta(const int indice_capa, const int neurona_destino, const int indice_dato, MatrixXd& derivada_pesos, VectorXd& derivada_sesgo){
+    int indice_ultima_capa = this->capas.size()-1;
+    VectorXd vector_y = this->Y.row(indice_dato);
+    VectorXd soft_h = this->softmax(this->vector_activacion(indice_ultima_capa));
 
-    VectorXd soft_h = this->softmax(vector_h);
-    VectorXd vector_recursion = producto_recursivo(ultima_capa, capa, neurona_destino);
-    // cout<<"LLAMAR"<<endl;
-    VectorXd derivada_h_b = vector_recursion * vector_derivada_activacion(capa).coeff(neurona_destino);
-    // cout<<capa<<endl;
-    // cout<<"Recursivo Inicio"<<endl;
-    // cout<<"Recursivo Fin"<<endl;
+    VectorXd vector_R = derivada_recursiva(indice_ultima_capa, indice_capa+1, neurona_destino);
 
-    derivada_sesgo[neurona_destino] = (soft_h - vector_y).dot(derivada_h_b);
-    // cout<<"Actualiza sesgo "<<capa<<" "<<neurona_destino<<endl;
-    // derivada_sesgo[neurona_destino] = vector_recursion.cwiseProduct(diferencia_y).mean() * vector_derivada_activacion(capa).coeff(neurona_destino);
-    // cout<<"Actualiza pesos"<<endl;
-    derivada_pesos.col(neurona_destino) = derivada_sesgo[neurona_destino] * vector_activacion(capa-1, fila);
+    derivada_sesgo[neurona_destino] = (soft_h - vector_y).dot(vector_R * vector_derivada_activacion(indice_capa)[neurona_destino]);
+    derivada_pesos.col(neurona_destino) = derivada_sesgo[neurona_destino] * vector_activacion(indice_capa-1, indice_dato);
 }
 
 MLP::MLP(MatrixXd X, MatrixXd Y): X(X), Y(Y) {};

@@ -19,7 +19,7 @@ struct MLP {
     VectorXd salida;
     MatrixXd X, Y;
 
-    VectorXd producto_recursivo(const int, const int, const int);
+    VectorXd derivada_recursiva(const int, const int, const int);
     void derivadas_oculta(const int, const int, const int, MatrixXd&, VectorXd&);
     void derivadas_salida(const int, MatrixXd&, VectorXd&);
     double coste(const VectorXd&, const VectorXd&);
