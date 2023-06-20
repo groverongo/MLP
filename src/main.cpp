@@ -16,7 +16,7 @@ void ejecutar(){
     mlp.agregar_capa(Capa{(int) X.cols(), 200, Activacion::sigmoidea});
     mlp.agregar_capa(Capa{200, (int) Y.cols(), Activacion::sigmoidea});
 
-    mlp.entrenar(100, 0.05);
+    mlp.entrenar(1000, 0.05);
     mlp.exportar();
     // mlp.cargar();
 }
