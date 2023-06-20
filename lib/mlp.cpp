@@ -1,18 +1,12 @@
 #include "mlp.h"
 
-/**
- * @brief Calculo recursivo para las derivadas de los pesos de las capas ocultas
- * @param capa_actual: parametro de recursion, inicia en la ultima capa y disminuye, utilizado para indexar
- * @param capa_peso: en que capa el peso se encuentra, no aplica para pesos de la capa de salida
- * @param neurona_destino: hacia que neurona el peso se dirije
- * @return Un vector del calculo actual
- * @note El caso base ocurre cuando capa_actual = capa_peso
- * */
 VectorXd MLP::derivada_recursiva(const int capa_actual, const int capa_limite, const int neurona_destino){
     if(capa_actual == capa_limite){
-        return vector_derivada_activacion(capa_limite).cwiseProduct(matriz_pesos(capa_limite).transpose().col(neurona_destino));
+        return vector_derivada_activacion(capa_limite)
+            .cwiseProduct(matriz_pesos(capa_limite).transpose().col(neurona_destino));
     }
-    return vector_derivada_activacion(capa_actual).cwiseProduct(matriz_pesos(capa_actual).transpose() * this->derivada_recursiva(capa_actual-1, capa_limite, neurona_destino));
+    return vector_derivada_activacion(capa_actual).cwiseProduct(matriz_pesos(capa_actual).transpose() 
+        * this->derivada_recursiva(capa_actual-1, capa_limite, neurona_destino));
 }
 
 VectorXd MLP::softmax(const VectorXd& vec){
@@ -128,7 +122,8 @@ void MLP::derivadas_oculta(const int capa, const int neurona_destino, const int 
     // cout<<"Recursivo Fin"<<endl;
     
     // cout<<"Actualiza sesgo "<<capa<<" "<<neurona_destino<<endl;
-    derivada_sesgo[neurona_destino] = vector_recursion.cwiseProduct(diferencia_y).mean() * vector_derivada_activacion(capa).coeff(neurona_destino);
+    derivada_sesgo[neurona_destino] = vector_recursion.
+        cwiseProduct(diferencia_y).mean() * vector_derivada_activacion(capa).coeff(neurona_destino);
     // cout<<"Actualiza pesos"<<endl;
     derivada_pesos.col(neurona_destino) = derivada_sesgo[neurona_destino] * vector_activacion(capa-1, fila);
 }
