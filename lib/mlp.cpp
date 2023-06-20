@@ -10,9 +10,18 @@
  * */
 VectorXd MLP::producto_recursivo(const int capa_actual, const int capa_peso, const int neurona_destino){
     const Capa& capa_objetivo = this->capas[capa_actual];
+        // cout<<capa_objetivo.derivada_activado.rows()<<' '<<capa_objetivo.derivada_activado.cols()<<endl;
+        // cout<<capa_objetivo.pesos.transpose().rows()<<' '<<capa_objetivo.pesos.transpose().cols()<<endl;
     if(capa_actual == capa_peso){
+        // cout<<capa_objetivo.pesos.transpose().rows()<<' '<<capa_objetivo.pesos.transpose().cols()<<endl;
+        // cout<<capa_objetivo.derivada_activado.rows()<<' '<<capa_objetivo.derivada_activado.cols()<<endl;
+        // cout<<"retornar"<<endl;
+        // cout<<capa_objetivo.pesos.transpose().col(neurona_destino).size()<<endl;
+        // cout<<capa_objetivo.derivada_activado.size()<<endl;
         return capa_objetivo.derivada_activado.cwiseProduct(capa_objetivo.pesos.transpose().col(neurona_destino));
+        // return capa_objetivo.derivada_activado.cwiseProduct(capa_objetivo.pesos.transpose().col(neurona_destino));
     }
+    // cout<<capa_actual<<"->";
     return capa_objetivo.derivada_activado.cwiseProduct(capa_objetivo.pesos.transpose() * this->producto_recursivo(capa_actual-1, capa_peso, neurona_destino));
 }
 
@@ -107,11 +116,11 @@ void MLP::propagacion_atras(const int fila, const double ratio_aprendizaje) {
         derivada_pesos = MatrixXd(this->matriz_pesos(l).rows(), this->matriz_pesos(l).cols());
         derivada_sesgo = VectorXd(this->vector_sesgo(l).size());
         // cout<<"NONONO"<<endl;
-        for(int i = 0; i<derivada_pesos.cols(); i++){
+        for(int i = 0; i<derivada_pesos.rows(); i++){
+            // cout<<l<<", "<<i<<endl;
             this->entropia_derivadas_oculta(l, i, fila, derivada_pesos, derivada_sesgo);
             // cout<<"Iteracion "<<derivada_pesos.cols()<<endl;
         }
-        // cout<<"NONONO"<<endl;
 
         this->matriz_pesos(l) -= ratio_aprendizaje * derivada_pesos; 
         this->vector_sesgo(l) -= ratio_aprendizaje * derivada_sesgo;
@@ -208,8 +217,8 @@ void MLP::entropia_derivadas_oculta(const int capa, const int neurona_destino, c
     VectorXd vector_h = this->vector_activacion(ultima_capa, fila);
 
     VectorXd soft_h = this->softmax(vector_h);
-
     VectorXd vector_recursion = producto_recursivo(ultima_capa, capa, neurona_destino);
+    // cout<<"LLAMAR"<<endl;
     VectorXd derivada_h_b = vector_recursion * vector_derivada_activacion(capa).coeff(neurona_destino);
     // cout<<capa<<endl;
     // cout<<"Recursivo Inicio"<<endl;

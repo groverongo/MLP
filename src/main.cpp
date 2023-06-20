@@ -11,8 +11,10 @@ void ejecutar(){
     MatrixXd Y = datos.rightCols(datos.cols() - 128);
     
     MLP mlp(X, Y);
-    mlp.agregar_capa(Capa{(int) X.cols(), 100, Activacion::sigmoidea});
-    mlp.agregar_capa(Capa{100, (int) Y.cols(), Activacion::sigmoidea});
+    // cout<<X.rows()<<' '<<X.cols()<<endl;
+    // cout<<Y.rows()<<' '<<Y.cols()<<endl;
+    mlp.agregar_capa(Capa{(int) X.cols(), 200, Activacion::sigmoidea});
+    mlp.agregar_capa(Capa{200, (int) Y.cols(), Activacion::sigmoidea});
 
     mlp.entrenar(100, 0.05);
     mlp.exportar();
