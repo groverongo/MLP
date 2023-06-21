@@ -40,6 +40,10 @@ VectorXd Capa::propagar(const VectorXd &vec){
     return this->activado;
 }
 
+VectorXd Capa::evaluar(const VectorXd& vec){
+    return this->activacion(this->pesos.transpose() * vec + this->sesgo);
+}
+
 VectorXd Capa::relu(const VectorXd& vec)
 {
     return vec.array().max(0.0);

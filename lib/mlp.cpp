@@ -1,5 +1,23 @@
 #include "mlp.h"
 
+void MLP::asignar_datos_validacion(MatrixXd x_val, MatrixXd y_val){
+    this->X_val = x_val;
+    this->Y_val = y_val;
+}
+double MLP::perdida_validacion(){
+    int filas = X_val.rows();
+    VectorXd perdidas(filas);
+    for(int f = 0; f<filas; f++){
+        VectorXd vec_h = X_val.row(f).transpose();
+        for(Capa c: this->capas){
+            vec_h = c.evaluar(vec_h);
+        }
+        vec_h = this->softmax(vec_h);
+        perdidas[f] = this->entropia(vec_h, Y_val.row(f));
+    }
+    return perdidas.mean();
+}
+
 VectorXd MLP::derivada_recursiva(const int capa_actual, const int capa_limite, const int neurona_destino){
     if(capa_actual == capa_limite){
         return vector_derivada_activacion(capa_limite)
@@ -160,13 +178,14 @@ void MLP::entrenar(const int epocas, const double ratio_aprendizaje) {
     for (int epoca = 0; epoca < epocas; epoca++) {
         printf("Epoca N-%d -> ", epoca+1);
         VectorXd perdidas(n);
+        double perdida_val = perdida_validacion();
         for (int i = 0; i < n; ++i) {
             double perdida = this->propagacion_adelante(i);
             perdidas[i] = perdida;
             this->propagacion_atras(i, ratio_aprendizaje);
         }
-        printf("Perdida: %lf\n", perdidas.mean());
-        archivo_p<<perdidas.mean()<<'\n';
+        printf("Perdida: %lf %lf\n", perdidas.mean(), perdida_val);
+        archivo_p<<perdidas.mean()<<','<<perdida_val<<'\n';
     }
     archivo_p.close();
 }

@@ -19,6 +19,7 @@ struct MLP {
     vector<Capa> capas;
     VectorXd salida;
     MatrixXd X, Y;
+    MatrixXd X_val, Y_val;
 
     /**
      * @brief Calculo recursivo para las derivadas de los pesos de las capas ocultas
@@ -72,6 +73,9 @@ struct MLP {
     void agregar_capa(Capa);
     double propagacion_adelante(const int);
     void propagacion_atras(const int, const double);
+
+    void asignar_datos_validacion(MatrixXd, MatrixXd);
+    double perdida_validacion();
 
     void entrenar(const int, const double);
     MatrixXd evaluar();

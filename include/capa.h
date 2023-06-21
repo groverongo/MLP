@@ -56,6 +56,8 @@ struct Capa
 
     // Evaluar la salida con el calculo del valor neto y activado
     VectorXd propagar(const VectorXd&);
+
+    VectorXd evaluar(const VectorXd&);
 };
 
 #endif
