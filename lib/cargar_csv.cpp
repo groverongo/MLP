@@ -29,3 +29,16 @@ MatrixXd cargar_csv(const string& ruta){
 
     return matriz;
 }
+
+void exportar_csv(const MatrixXd& matriz, const string& ruta){
+    ofstream archivo(ruta, ios::out);
+    for(int fila = 0; fila<matriz.rows(); fila++){
+        for(int columna = 0; columna<matriz.cols(); columna++){
+            archivo<<matriz(fila, columna);
+            if(columna != matriz.cols() -1)
+                archivo<<',';
+        }
+        archivo<<'\n';
+    }
+    archivo.close();
+}

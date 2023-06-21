@@ -5,13 +5,12 @@
 #include"cargar_csv.h"
 using namespace std;
 
-void ejecutar(){
+void ejecutar_entrenamiento(){
     MatrixXd datos = cargar_csv("./../../res/training.csv");
     MatrixXd X = datos.leftCols(128);
     MatrixXd Y = datos.rightCols(datos.cols() - 128);
     
     MLP mlp(X, Y);
-    mlp.cargar("../../data/");
      /*ACA DEFINEN LAS CAPAS HIDDEN DEL SHEETS*/
     // mlp.agregar_capa(Capa{(int) X.cols(), 50, Activacion::tanh});
     // mlp.agregar_capa(Capa{50, 200, Activacion::tanh});
@@ -25,11 +24,24 @@ void ejecutar(){
     // mlp.exportar(); 
 }
 
+void ejecutar_evaluacion(){
+    MatrixXd datos = cargar_csv("./../../res/testing.csv");
+    MatrixXd X = datos.leftCols(128);
+    MatrixXd Y = datos.rightCols(datos.cols() - 128);
+    
+    string carpeta = "C1_50_T";
+    MLP mlp(X, Y);
+    mlp.cargar("../../data/"+carpeta+"/");
+    MatrixXd predicciones = mlp.evaluar();
+    exportar_csv(predicciones,"../../data/"+carpeta+"/"+carpeta+".csv");
+}
+
 
 int main()
 {
     try{
-        ejecutar();
+        // ejecutar_entrenamiento();
+        ejecutar_evaluacion();
     }
     catch(const char* a){
         cout<<a;
