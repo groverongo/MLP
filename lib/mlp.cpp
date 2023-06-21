@@ -20,7 +20,7 @@ double MLP::propagacion_adelante(const int fila){
         vec_h = c.propagar(vec_h);
     }
     this->salida = this->softmax(vec_h);
-    return this->entropia(vec_h, Y.row(fila));
+    return this->entropia(salida, Y.row(fila));
 }
 
 void MLP::cargar(string ruta){
