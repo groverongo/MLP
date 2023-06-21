@@ -9,6 +9,7 @@
 #include"capa.h"
 #include<cstdio>
 #include<functional>
+#include"cargar_csv.h"
 using namespace std;
 using namespace Eigen;
 
@@ -78,7 +79,7 @@ struct MLP {
     VectorXd softmax(const VectorXd&);
 
     void exportar();
-    void cargar();
+    void cargar(string);
 };
 
 

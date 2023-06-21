@@ -23,16 +23,41 @@ double MLP::propagacion_adelante(const int fila){
     return this->entropia(vec_h, Y.row(fila));
 }
 
-void MLP::cargar(){
+void MLP::cargar(string ruta){
     int l;
-    ifstream cantidad("../../data/cantidad.txt");
+    ifstream cantidad(ruta+"cantidad.txt");
     cantidad>>l;
     cantidad.close();
-    ifstream archivo_act("../../data/activacion.csv");
-    archivo_act.close();
+
+    int act_c;
+    Activacion funcion;
+    ifstream archivo_act(ruta+"activacion.csv");
     for(int i = 0; i<l; i++){
+        archivo_act>>act_c;
+        switch (act_c)
+        {
+        case 0:
+            funcion = Activacion::sigmoidea;
+            break;
+        case 1:
+            funcion = Activacion::tanh;
+            break;
+        case 2:
+            funcion = Activacion::relu;
+            break;
+        }
+
+        // Leer CSV
+        MatrixXd pesos = cargar_csv(ruta + "pesos_capa_"+to_string(i)+".csv");
+
+        Capa capa_i = Capa{(int) pesos.rows(),(int) pesos.cols(), funcion};
+        capa_i.pesos = pesos;
+        capa_i.sesgo = cargar_csv(ruta + "sesgo_capa_"+to_string(i)+".csv");
+
+        this->agregar_capa(capa_i);
 
     }
+    archivo_act.close();
 }
 
 void MLP::exportar(){
