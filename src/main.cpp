@@ -11,14 +11,17 @@ void ejecutar(){
     MatrixXd Y = datos.rightCols(datos.cols() - 128);
     
     MLP mlp(X, Y);
-    // cout<<X.rows()<<' '<<X.cols()<<endl;
-    // cout<<Y.rows()<<' '<<Y.cols()<<endl;
+
+    /*ACA DEFINEN LAS CAPAS HIDDEN DEL SHEETS*/
     mlp.agregar_capa(Capa{(int) X.cols(), 200, Activacion::sigmoidea});
+
+    /*ESTA ES LA CAPA FINAL, LA DEJAN CON SIGMOIDEA, SOLO MODIFICAN EL ENTERO DE INPUTS*/
     mlp.agregar_capa(Capa{200, (int) Y.cols(), Activacion::sigmoidea});
 
     mlp.entrenar(1000, 0.05);
+    /* CADA VEZ QUE TERMINAN UN EXP, GUARDAN LO QUE ESTÁ EN DATA EN 
+    UN FOLDER APARTE PORQUE SINO LO SOBREESCRIBE PARA SU SIGTE EXP */
     mlp.exportar();
-    // mlp.cargar();
 }
 
 

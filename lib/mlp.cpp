@@ -131,6 +131,7 @@ void MLP::derivadas_oculta(const int capa, const int neurona_destino, const int 
 
 void MLP::entrenar(const int epocas, const double ratio_aprendizaje) {
     int n = X.rows();
+    ofstream archivo_p("../../data/perdidas.csv", ios::out);
     for (int epoca = 0; epoca < epocas; epoca++) {
         printf("Epoca N-%d -> ", epoca+1);
         VectorXd perdidas(n);
@@ -140,7 +141,9 @@ void MLP::entrenar(const int epocas, const double ratio_aprendizaje) {
             this->propagacion_atras(i, ratio_aprendizaje);
         }
         printf("Perdida: %lf\n", perdidas.mean());
+        archivo_p<<perdidas.mean()<<'\n';
     }
+    archivo_p.close();
 }
 
 MatrixXd MLP::evaluar(){
