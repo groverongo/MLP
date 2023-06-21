@@ -25,10 +25,12 @@ void ejecutar_entrenamiento(){
 }
 
 void ejecutar_evaluacion(){
-    MatrixXd datos = cargar_csv("./../../res/testing.csv");
+    MatrixXd datos = cargar_csv("./../../res/training.csv");
     MatrixXd X = datos.leftCols(128);
     MatrixXd Y = datos.rightCols(datos.cols() - 128);
     
+    cout<<Y.rows()<<' '<<Y.cols()<<endl;
+
     string carpeta = "C1_50_T";
     MLP mlp(X, Y);
     mlp.cargar("../../data/"+carpeta+"/");

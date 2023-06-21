@@ -175,11 +175,8 @@ MatrixXd MLP::evaluar(){
     int filas = X.rows();
     MatrixXd resultado(this->Y.rows(), this->Y.cols());
     for(int i = 0; i<filas; i++){
-        VectorXd vec_h = X.row(i);
-        for(Capa &c: this->capas){
-            vec_h = c.propagar(vec_h);
-        }
-        resultado.row(i) = vec_h.transpose();
+        this->propagacion_adelante(i);
+        resultado.row(i) = this->salida.transpose();
     }
     return resultado;
 }
