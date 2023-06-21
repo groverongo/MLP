@@ -6,65 +6,68 @@ Capa::Capa(int entrada, int salida, Activacion act)
 Capa::Capa(Activacion act)
     :tipo(act){}
 
-VectorXd Capa::activacion(){
+VectorXd Capa::activacion(const VectorXd& vec){
     switch (this->tipo)
     {
     case Activacion::sigmoidea:
-        return this->sigmoidea();
+        return this->sigmoidea(vec);
     case Activacion::tanh:
-        return this->tanh();
+        return this->tanh(vec);
     case Activacion::relu:
-        return this->relu();
+        return this->relu(vec);
     }
-    return this->sigmoidea();
+    return this->sigmoidea(vec);
 }
 
-VectorXd Capa::derivada_activacion(){
+VectorXd Capa::derivada_activacion(const VectorXd& vec){
     switch (this->tipo)
     {
     case Activacion::sigmoidea:
-        return this->derivada_sigmoidea();
+        return this->derivada_sigmoidea(vec);
     case Activacion::tanh:
-        return this->derivada_tanh();
+        return this->derivada_tanh(vec);
     case Activacion::relu:
-        return this->derivada_relu();
+        return this->derivada_relu(vec);
     }
-    return this->derivada_sigmoidea();
+    return this->derivada_sigmoidea(vec);
     
 }
 
 VectorXd Capa::propagar(const VectorXd &vec){
     this->neto = this->pesos.transpose() * vec + this->sesgo;
-    this->activado = this->activacion();
-    this->derivada_activado = this->derivada_activacion();
+    this->activado = this->activacion(this->neto);
+    this->derivada_activado = this->derivada_activacion(this->neto);
     return this->activado;
 }
+VectorXd Capa::evaluar(const VectorXd &vec){
+    return this->activacion(this->pesos.transpose() * vec + this->sesgo);
+}
 
-VectorXd Capa::relu()
+VectorXd Capa::relu(const VectorXd& vec)
 {
-    return this->neto.array().max(0.0);
+    return vec.array().max(0.0);
 }
 
-VectorXd Capa::sigmoidea()
+VectorXd Capa::sigmoidea(const VectorXd& vec)
 {
-    return (1 + (-this->neto.array()).exp()).pow(-1);
+    return (1 + (-vec.array()).exp()).pow(-1);
 }
 
-VectorXd Capa::tanh()
+VectorXd Capa::tanh(const VectorXd& vec)
 {
-    return this->neto.array().tanh();
+    return vec.array().tanh();
 }
 
-VectorXd Capa::derivada_sigmoidea(){
-    return this->activado.array()*(1-this->activado.array());
+VectorXd Capa::derivada_sigmoidea(const VectorXd& vec){
+    return vec.array()*(1-this->activado.array());
 }
 
-VectorXd Capa::derivada_tanh(){
-    return 1 - this->activado.array().pow(2);
+VectorXd Capa::derivada_tanh(const VectorXd& vec){
+    return 1 - vec.array().pow(2);
 }
 
-VectorXd Capa::derivada_relu(){
-    return this->activado.unaryExpr([](double valor){
+VectorXd Capa::derivada_relu(const VectorXd& vec){
+    return vec.unaryExpr([](double valor){
         return valor != 0.0 ? 1.0: 0.0;
     });
 }

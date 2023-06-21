@@ -20,7 +20,29 @@ double MLP::propagacion_adelante(const int fila){
         vec_h = c.propagar(vec_h);
     }
     this->salida = this->softmax(vec_h);
-    return this->entropia(vec_h, Y.row(fila));
+    // cout<<this->entropia(this->salida, Y.row(fila))<<endl;
+    // cout<< this->salida<<endl;
+    // throw "ASDAD";
+    return this->entropia(this->salida, Y.row(fila));
+}
+
+void MLP::agregar_validaciones(MatrixXd x_val, MatrixXd y_val){
+    this->X_val = x_val;
+    this->Y_val = y_val;
+}
+
+double MLP::perdidas_val(){
+    int filas = this->X_val.rows();
+    VectorXd perdidas(filas);
+    for(int f = 0; f < filas; f++){
+        VectorXd vec_h = this->X_val.row(f).transpose();
+        for(Capa c: this->capas){
+            vec_h = c.evaluar(vec_h);
+        }
+        vec_h = this->softmax(vec_h);
+        perdidas[f] = this->entropia(vec_h, this->Y_val.row(f));
+    }
+    return perdidas.mean();
 }
 
 void MLP::cargar(string ruta){
@@ -165,8 +187,9 @@ void MLP::entrenar(const int epocas, const double ratio_aprendizaje) {
             perdidas[i] = perdida;
             this->propagacion_atras(i, ratio_aprendizaje);
         }
-        printf("Perdida: %lf\n", perdidas.mean());
-        archivo_p<<perdidas.mean()<<'\n';
+        double perdida_validacion = perdidas_val();
+        printf("Perdida: %lf %lf\n", perdidas.mean(), perdida_validacion);
+        archivo_p<<perdidas.mean()<<','<<perdida_validacion<<'\n';
     }
     archivo_p.close();
 }

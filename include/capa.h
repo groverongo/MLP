@@ -3,6 +3,7 @@
 
 #include<Eigen/Dense>
 #include<string>
+#include<iostream>
 
 using namespace Eigen;
 
@@ -31,24 +32,24 @@ struct Capa
     VectorXd derivada_activado;
 
     // funcion activacion
-    VectorXd activacion();
+    VectorXd activacion(const VectorXd& vec);
     // funcion derivada activacion
-    VectorXd derivada_activacion();
+    VectorXd derivada_activacion(const VectorXd& vec);
 
 
     // funcion sigmoidea
-    VectorXd sigmoidea();
+    VectorXd sigmoidea(const VectorXd& vec);
     // funcion tangente hiperbolico
-    VectorXd tanh();
+    VectorXd tanh(const VectorXd& vec);
     // funcion relu
-    VectorXd relu();
+    VectorXd relu(const VectorXd& vec);
 
     // funcion sigmoidea
-    VectorXd derivada_sigmoidea();
+    VectorXd derivada_sigmoidea(const VectorXd& vec);
     // funcion tangente hiperbolico
-    VectorXd derivada_tanh();
+    VectorXd derivada_tanh(const VectorXd& vec);
     // funcion relu
-    VectorXd derivada_relu();
+    VectorXd derivada_relu(const VectorXd& vec);
 
     // Iniciar Capa con entradas, salidas y funcion de activacion
     Capa(int, int, Activacion);
@@ -56,6 +57,7 @@ struct Capa
 
     // Evaluar la salida con el calculo del valor neto y activado
     VectorXd propagar(const VectorXd&);
+    VectorXd evaluar(const VectorXd&);
 };
 
 #endif
