@@ -31,24 +31,24 @@ struct Capa
     VectorXd derivada_activado;
 
     // funcion activacion
-    VectorXd activacion();
+    VectorXd activacion(const VectorXd&);
     // funcion derivada activacion
-    VectorXd derivada_activacion();
+    VectorXd derivada_activacion(const VectorXd&);
 
 
     // funcion sigmoidea
-    VectorXd sigmoidea();
+    VectorXd sigmoidea(const VectorXd&);
     // funcion tangente hiperbolico
-    VectorXd tanh();
+    VectorXd tanh(const VectorXd&);
     // funcion relu
-    VectorXd relu();
+    VectorXd relu(const VectorXd&);
 
     // funcion sigmoidea
-    VectorXd derivada_sigmoidea();
+    VectorXd derivada_sigmoidea(const VectorXd&);
     // funcion tangente hiperbolico
-    VectorXd derivada_tanh();
+    VectorXd derivada_tanh(const VectorXd&);
     // funcion relu
-    VectorXd derivada_relu();
+    VectorXd derivada_relu(const VectorXd&);
 
     // Iniciar Capa con entradas, salidas y funcion de activacion
     Capa(int, int, Activacion);

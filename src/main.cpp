@@ -41,8 +41,8 @@ void ejecutar_evaluacion(string carpeta){
 int main()
 {
     try{
-        // ejecutar_entrenamiento();
-        ejecutar_evaluacion("renuevo");
+        ejecutar_entrenamiento();
+        // ejecutar_evaluacion("renuevo");
     }
     catch(const char* a){
         cout<<a;
