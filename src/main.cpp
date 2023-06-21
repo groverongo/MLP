@@ -20,11 +20,11 @@ void ejecutar_entrenamiento(){
     // FIN DE NO TOCAR
 
      /*ACA DEFINEN LAS CAPAS HIDDEN DEL SHEETS*/
-    mlp.agregar_capa(Capa{(int) X.cols(), 50, Activacion::tanh});
+    mlp.agregar_capa(Capa{(int) X.cols(), 100, Activacion::sigmoidea});
     // mlp.agregar_capa(Capa{50, 200, Activacion::tanh});
 
     /*ESTA ES LA CAPA FINAL, LA DEJAN CON SIGMOIDEA, SOLO MODIFICAN EL ENTERO DE INPUTS*/
-    mlp.agregar_capa(Capa{50,  (int) Y.cols(), Activacion::sigmoidea});
+    mlp.agregar_capa(Capa{100,  (int) Y.cols(), Activacion::sigmoidea});
 
     mlp.entrenar(50, 0.05);
     /* CADA VEZ QUE TERMINAN UN EXP, GUARDAN LO QUE ESTÁ EN DATA EN 
