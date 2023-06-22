@@ -115,10 +115,10 @@ int main()
     try{
         // Solo ejecutar el entrenamiento, la evaluación la haré cuando todo esté hecho
         // ejecutar_entrenamiento();
-        // ejecutar_evaluacion("C1_50_T");
-        for(int c= 0; c<carpetas.size(); c++){
+        /* for(int c= 0; c<carpetas.size(); c++){
             ejecutar_evaluacion(carpetas[c]);
-        }
+        } */
+        evaluar_mejor_modelo();
     }
     catch(const char* a){
         cout<<a;
