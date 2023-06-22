@@ -110,14 +110,18 @@ void evaluar_mejor_modelo(){
 
 }
 
+void obtener_resultados(){
+    for(int c= 0; c<carpetas.size(); c++){
+        ejecutar_evaluacion(carpetas[c]);
+    }
+}
+
 int main()
 {
     try{
         // Solo ejecutar el entrenamiento, la evaluación la haré cuando todo esté hecho
         // ejecutar_entrenamiento();
-        /* for(int c= 0; c<carpetas.size(); c++){
-            ejecutar_evaluacion(carpetas[c]);
-        } */
+        obtener_resultados();
         evaluar_mejor_modelo();
     }
     catch(const char* a){
