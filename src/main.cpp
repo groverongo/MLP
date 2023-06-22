@@ -98,6 +98,17 @@ void ejecutar_evaluacion(string carpeta){
     exportar_csv(predicciones,"../../data/"+carpeta+"/"+carpeta+".csv");
 }
 
+void evaluar_mejor_modelo(){
+    MatrixXd datos = cargar_csv("./../../res/testing.csv");
+    MatrixXd X = datos.leftCols(128);
+    MatrixXd Y = datos.rightCols(datos.cols() - 128);
+    
+    MLP mlp(X, Y);
+    mlp.cargar("../../data/C1_50_T/");
+    MatrixXd predicciones = mlp.evaluar();
+    exportar_csv(predicciones,"../../data/preds.csv");
+
+}
 
 int main()
 {
