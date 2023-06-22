@@ -1,9 +1,60 @@
 #include <cstdio>
 #include<iostream>
+#include<vector>
+#include<string>
 #include <Eigen/Dense>
 #include "mlp.h"
 #include"cargar_csv.h"
 using namespace std;
+
+
+vector<string> carpetas = {
+	"C1_100_R",
+	"C1_100_R_C2_200_R",
+	"C1_100_R_C2_200_R_C3_50_R",
+	"C1_100_R_C2_50_R",
+	"C1_100_R_C2_50_R_C3_200_R",
+	"C1_100_S",
+	"C1_100_S_C2_200_S",
+	"C1_100_S_C2_200_S_C3_50_S",
+	"C1_100_S_C2_50_S",
+	"C1_100_S_C2_50_S_C3_200_S",
+	"C1_100_T",
+	"C1_100_T_C2_200_T",
+	"C1_100_T_C2_200_T_C3_50_T",
+	"C1_100_T_C2_50_T",
+	"C1_100_T_C2_50_T_C3_200_T",
+	"C1_200_R",
+	"C1_200_R_C2_100_R",
+	"C1_200_R_C2_100_R_C3_50_R",
+	"C1_200_R_C2_50_R",
+	"C1_200_R_C2_50_R_C3_100_R",
+	"C1_200_S",
+	"C1_200_S_C2_100_S",
+	"C1_200_S_C2_100_S_C3_50_S",
+	"C1_200_S_C2_50_S",
+	"C1_200_S_C2_50_S_C3_100_S",
+	"C1_200_T",
+	"C1_200_T_C2_100_T",
+	"C1_200_T_C2_100_T_C3_50_T",
+	"C1_200_T_C2_50_T",
+	"C1_200_T_C2_50_T_C3_100_T",
+	"C1_50_R",
+	"C1_50_R_C2_100_R",
+	"C1_50_R_C2_100_R_C3_200_R",
+	"C1_50_R_C2_200_R",
+	"C1_50_R_C2_200_R_C3_100_R",
+	"C1_50_S",
+	"C1_50_S_C2_100_S",
+	"C1_50_S_C2_100_S_C3_200",
+	"C1_50_S_C2_200_S",
+	"C1_50_S_C2_200_S_C3_100_S",
+	"C1_50_T",
+	"C1_50_T_C2_100_T",
+	"C1_50_T_C2_100_T_C3_200_T",
+	"C1_50_T_C2_200_T",
+	"C1_50_T_C2_200_T_C3_100_T"
+};
 
 void ejecutar_entrenamiento(){
     // NO TOCAR
@@ -20,11 +71,13 @@ void ejecutar_entrenamiento(){
     // FIN DE NO TOCAR
 
      /*ACA DEFINEN LAS CAPAS HIDDEN DEL SHEETS*/
-    mlp.agregar_capa(Capa{(int) X.cols(), 100, Activacion::sigmoidea});
+    mlp.agregar_capa(Capa{(int) X.cols(), 50, Activacion::tanh});
+    mlp.agregar_capa(Capa{50, 100, Activacion::tanh});
+    mlp.agregar_capa(Capa{(int) 100, 200, Activacion::tanh});
     // mlp.agregar_capa(Capa{50, 200, Activacion::tanh});
 
     /*ESTA ES LA CAPA FINAL, LA DEJAN CON SIGMOIDEA, SOLO MODIFICAN EL ENTERO DE INPUTS*/
-    mlp.agregar_capa(Capa{100,  (int) Y.cols(), Activacion::sigmoidea});
+    mlp.agregar_capa(Capa{200,  (int) Y.cols(), Activacion::sigmoidea});
 
     mlp.entrenar(50, 0.05);
     /* CADA VEZ QUE TERMINAN UN EXP, GUARDAN LO QUE ESTÁ EN DATA EN 
@@ -50,8 +103,11 @@ int main()
 {
     try{
         // Solo ejecutar el entrenamiento, la evaluación la haré cuando todo esté hecho
-        ejecutar_entrenamiento();
+        // ejecutar_entrenamiento();
         // ejecutar_evaluacion("C1_50_T");
+        for(int c= 0; c<carpetas.size(); c++){
+            ejecutar_evaluacion(carpetas[c]);
+        }
     }
     catch(const char* a){
         cout<<a;

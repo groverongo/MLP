@@ -1,3 +1,0 @@
-INDICACIONES:
-Cuando esten los archivos, llevarlos a una nueva carpeta
-Luego volver a correr otro experimento (50 EPOCAS)
